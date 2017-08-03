@@ -3,6 +3,18 @@ local parser = clink.arg.new_parser
 
 local boxes = matchers.create_dirs_matcher(clink.get_env("userprofile") .. "/.vagrant.d/boxes/*")
 
+local function get_snapshots()
+	os.execute("vagrant snapshot list ssms2017 > fil.txt")
+	--local f = io.popen("vagrant snapshot ssms2017 list") -- runs command
+	--local f = io.popen("echo hello world")
+	--local l = f:read("*a") -- read output of command
+	--print(l)
+	--f:close()
+	print("here")
+	--print(result)
+	return {}
+end
+
 local vagrant_parser = parser({
     "box" .. parser({
         "add" .. parser(
@@ -55,12 +67,12 @@ local vagrant_parser = parser({
         "--provision",
         "--no-provision",
         "--no-delete"),
-    "save",
-    "restore" .. parser(
+    "save" .. parser({get_snapshots}),
+    "restore" .. parser({get_snapshots},
         "--provision",
         "--no-provision"),
     "list",
-    "delete"}),
+    "delete" .. parser({get_snapshots})}),
     "status",
     "suspend",
     "up" .. parser(
