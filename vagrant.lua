@@ -1,7 +1,9 @@
 local matchers = require('matchers')
 local parser = clink.arg.new_parser
 
-local boxes = matchers.create_dirs_matcher(clink.get_env("userprofile") .. "/.vagrant.d/boxes/*")
+local vagrant_home = clink.get_env("VAGRANT_HOME")
+if is_empty(vagrant_home) then vagrant_home = "/.vagrant.d" end
+local boxes = matchers.create_dirs_matcher(clink.get_env("userprofile") .. vagrant_home .. "/boxes/*")
 
 local vagrant_parser = parser({
     "box" .. parser({
